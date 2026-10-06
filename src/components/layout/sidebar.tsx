@@ -66,6 +66,7 @@ const NAV: Item[] = [
   { to: "/workspace", label: "Workspace", icon: LayoutGrid },
   { to: "/hr", label: "HR", icon: Briefcase },
   { to: "/college", label: "College Portal", icon: Landmark },
+  { to: "/marketing", label: "Marketing", icon: Megaphone, badge: "New" },
   { to: "/governance", label: "Governance", icon: Scale },
   { to: "/ai", label: "AI Analytics", icon: Sparkles, badge: "New" },
 ];

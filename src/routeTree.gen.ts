@@ -20,6 +20,7 @@ import { Route as AppExamsRouteImport } from './routes/_app.exams'
 import { Route as AppFeesRouteImport } from './routes/_app.fees'
 import { Route as AppGovernanceRouteImport } from './routes/_app.governance'
 import { Route as AppHrRouteImport } from './routes/_app.hr'
+import { Route as AppMarketingRouteImport } from './routes/_app.marketing'
 import { Route as AppSalesRouteImport } from './routes/_app.sales'
 import { Route as AppStudentsRouteImport } from './routes/_app.students'
 import { Route as AppWorkspaceRouteImport } from './routes/_app.workspace'
@@ -102,6 +103,11 @@ const AppGovernanceRoute = AppGovernanceRouteImport.update({
 const AppHrRoute = AppHrRouteImport.update({
   id: '/hr',
   path: '/hr',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppMarketingRoute = AppMarketingRouteImport.update({
+  id: '/marketing',
+  path: '/marketing',
   getParentRoute: () => AppRoute,
 } as any)
 const AppSalesRoute = AppSalesRouteImport.update({
@@ -262,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/fees': typeof AppFeesRoute
   '/governance': typeof AppGovernanceRoute
   '/hr': typeof AppHrRouteWithChildren
+  '/marketing': typeof AppMarketingRoute
   '/sales': typeof AppSalesRouteWithChildren
   '/students': typeof AppStudentsRoute
   '/workspace': typeof AppWorkspaceRoute
@@ -299,6 +306,7 @@ export interface FileRoutesByTo {
   '/exams': typeof AppExamsRoute
   '/fees': typeof AppFeesRoute
   '/governance': typeof AppGovernanceRoute
+  '/marketing': typeof AppMarketingRoute
   '/students': typeof AppStudentsRoute
   '/workspace': typeof AppWorkspaceRoute
   '/': typeof AppIndexRoute
@@ -340,6 +348,7 @@ export interface FileRoutesById {
   '/_app/fees': typeof AppFeesRoute
   '/_app/governance': typeof AppGovernanceRoute
   '/_app/hr': typeof AppHrRouteWithChildren
+  '/_app/marketing': typeof AppMarketingRoute
   '/_app/sales': typeof AppSalesRouteWithChildren
   '/_app/students': typeof AppStudentsRoute
   '/_app/workspace': typeof AppWorkspaceRoute
@@ -384,6 +393,7 @@ export interface FileRouteTypes {
     | '/fees'
     | '/governance'
     | '/hr'
+    | '/marketing'
     | '/sales'
     | '/students'
     | '/workspace'
@@ -421,6 +431,7 @@ export interface FileRouteTypes {
     | '/exams'
     | '/fees'
     | '/governance'
+    | '/marketing'
     | '/students'
     | '/workspace'
     | '/'
@@ -461,6 +472,7 @@ export interface FileRouteTypes {
     | '/_app/fees'
     | '/_app/governance'
     | '/_app/hr'
+    | '/_app/marketing'
     | '/_app/sales'
     | '/_app/students'
     | '/_app/workspace'
@@ -574,6 +586,13 @@ declare module '@tanstack/react-router' {
       path: '/hr'
       fullPath: '/hr'
       preLoaderRoute: typeof AppHrRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/marketing': {
+      id: '/_app/marketing'
+      path: '/marketing'
+      fullPath: '/marketing'
+      preLoaderRoute: typeof AppMarketingRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/sales': {
@@ -892,6 +911,7 @@ interface AppRouteChildren {
   AppFeesRoute: typeof AppFeesRoute
   AppGovernanceRoute: typeof AppGovernanceRoute
   AppHrRoute: typeof AppHrRouteWithChildren
+  AppMarketingRoute: typeof AppMarketingRoute
   AppSalesRoute: typeof AppSalesRouteWithChildren
   AppStudentsRoute: typeof AppStudentsRoute
   AppWorkspaceRoute: typeof AppWorkspaceRoute
@@ -908,6 +928,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppFeesRoute: AppFeesRoute,
   AppGovernanceRoute: AppGovernanceRoute,
   AppHrRoute: AppHrRouteWithChildren,
+  AppMarketingRoute: AppMarketingRoute,
   AppSalesRoute: AppSalesRouteWithChildren,
   AppStudentsRoute: AppStudentsRoute,
   AppWorkspaceRoute: AppWorkspaceRoute,
