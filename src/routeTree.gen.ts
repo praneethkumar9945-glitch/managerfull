@@ -24,6 +24,7 @@ import { Route as AppHrRouteImport } from './routes/_app.hr'
 import { Route as AppMarketingRouteImport } from './routes/_app.marketing'
 import { Route as AppSalesRouteImport } from './routes/_app.sales'
 import { Route as AppStudentsRouteImport } from './routes/_app.students'
+import { Route as AppUsersRouteImport } from './routes/_app.users'
 import { Route as AppWorkspaceRouteImport } from './routes/_app.workspace'
 import { Route as AppAcademicIndexRouteImport } from './routes/_app.academic.index'
 import { Route as AppAcademicAuditRouteImport } from './routes/_app.academic.audit'
@@ -124,6 +125,11 @@ const AppSalesRoute = AppSalesRouteImport.update({
 const AppStudentsRoute = AppStudentsRouteImport.update({
   id: '/students',
   path: '/students',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppUsersRoute = AppUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
   getParentRoute: () => AppRoute,
 } as any)
 const AppWorkspaceRoute = AppWorkspaceRouteImport.update({
@@ -278,6 +284,7 @@ export interface FileRoutesByFullPath {
   '/marketing': typeof AppMarketingRoute
   '/sales': typeof AppSalesRouteWithChildren
   '/students': typeof AppStudentsRoute
+  '/users': typeof AppUsersRoute
   '/workspace': typeof AppWorkspaceRoute
   '/academic/audit': typeof AppAcademicAuditRoute
   '/academic/reports': typeof AppAcademicReportsRoute
@@ -316,6 +323,7 @@ export interface FileRoutesByTo {
   '/governance': typeof AppGovernanceRoute
   '/marketing': typeof AppMarketingRoute
   '/students': typeof AppStudentsRoute
+  '/users': typeof AppUsersRoute
   '/workspace': typeof AppWorkspaceRoute
   '/': typeof AppIndexRoute
   '/academic/audit': typeof AppAcademicAuditRoute
@@ -360,6 +368,7 @@ export interface FileRoutesById {
   '/_app/marketing': typeof AppMarketingRoute
   '/_app/sales': typeof AppSalesRouteWithChildren
   '/_app/students': typeof AppStudentsRoute
+  '/_app/users': typeof AppUsersRoute
   '/_app/workspace': typeof AppWorkspaceRoute
   '/_app/': typeof AppIndexRoute
   '/_app/academic/audit': typeof AppAcademicAuditRoute
@@ -406,6 +415,7 @@ export interface FileRouteTypes {
     | '/marketing'
     | '/sales'
     | '/students'
+    | '/users'
     | '/workspace'
     | '/academic/audit'
     | '/academic/reports'
@@ -444,6 +454,7 @@ export interface FileRouteTypes {
     | '/governance'
     | '/marketing'
     | '/students'
+    | '/users'
     | '/workspace'
     | '/'
     | '/academic/audit'
@@ -487,6 +498,7 @@ export interface FileRouteTypes {
     | '/_app/marketing'
     | '/_app/sales'
     | '/_app/students'
+    | '/_app/users'
     | '/_app/workspace'
     | '/_app/'
     | '/_app/academic/audit'
@@ -627,6 +639,13 @@ declare module '@tanstack/react-router' {
       path: '/students'
       fullPath: '/students'
       preLoaderRoute: typeof AppStudentsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/users': {
+      id: '/_app/users'
+      path: '/users'
+      fullPath: '/users'
+      preLoaderRoute: typeof AppUsersRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/workspace': {
@@ -934,6 +953,7 @@ interface AppRouteChildren {
   AppMarketingRoute: typeof AppMarketingRoute
   AppSalesRoute: typeof AppSalesRouteWithChildren
   AppStudentsRoute: typeof AppStudentsRoute
+  AppUsersRoute: typeof AppUsersRoute
   AppWorkspaceRoute: typeof AppWorkspaceRoute
   AppIndexRoute: typeof AppIndexRoute
 }
@@ -951,6 +971,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppMarketingRoute: AppMarketingRoute,
   AppSalesRoute: AppSalesRouteWithChildren,
   AppStudentsRoute: AppStudentsRoute,
+  AppUsersRoute: AppUsersRoute,
   AppWorkspaceRoute: AppWorkspaceRoute,
   AppIndexRoute: AppIndexRoute,
 }

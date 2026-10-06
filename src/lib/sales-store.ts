@@ -3,6 +3,7 @@
 // exposes a tiny pub/sub for React via useSyncExternalStore.
 
 import { useSyncExternalStore } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export type Agent = {
   id: string;
@@ -88,11 +89,29 @@ function load(): State {
 let state: State = load();
 const listeners = new Set<() => void>();
 
+let cloudTimer: ReturnType<typeof setTimeout> | null = null;
 function persist() {
   if (typeof window !== "undefined") {
     window.localStorage.setItem(KEY, JSON.stringify(state));
+    if (cloudTimer) clearTimeout(cloudTimer);
+    cloudTimer = setTimeout(async () => {
+      const { data: u } = await supabase.auth.getUser();
+      if (!u.user) return;
+      await supabase.from("app_state").upsert({ key: KEY, value: state as never, updated_by: u.user.id, updated_at: new Date().toISOString() });
+    }, 600);
   }
   listeners.forEach((l) => l());
+}
+
+// Pull the shared copy from the cloud once in the browser.
+if (typeof window !== "undefined") {
+  supabase.from("app_state").select("value").eq("key", KEY).maybeSingle().then(({ data }) => {
+    if (data) {
+      state = data.value as State;
+      window.localStorage.setItem(KEY, JSON.stringify(state));
+      listeners.forEach((l) => l());
+    }
+  });
 }
 
 function set(updater: (s: State) => State) {
