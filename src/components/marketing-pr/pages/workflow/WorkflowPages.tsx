@@ -87,7 +87,7 @@ export function WorkflowDashboard({ state }: WorkflowPageProps) {
   const openTasks = state.content.filter((item) => ['Draft', 'Submitted', 'Not Started'].includes(item.status) || item.status === 'Draft').length
     + state.digital.filter((activity) => ['Not Started', 'In Progress'].includes(activity.status)).length
     + state.events.filter((event) => ['Not Started', 'In Progress'].includes(event.status)).length;
-  const inProgressTasks = state.content.filter((item) => item.status === 'In Progress' || item.status === 'Under Review').length
+  const inProgressTasks = state.content.filter((item) => item.status === 'Under Review').length
     + state.digital.filter((activity) => activity.status === 'In Progress').length
     + state.events.filter((event) => event.status === 'In Progress').length;
   const pendingReviewTasks = state.content.filter((item) => ['Submitted', 'Under Review'].includes(item.status)).length
