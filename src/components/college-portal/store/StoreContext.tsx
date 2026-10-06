@@ -1,6 +1,7 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
 import type { AppData, Role, Staff, Student, Subject, Candidate, ApprovalRequest, Grievance, Message, TimetableEntry, Notification, Policy, Complaint, NonTeachingTask, Resource, ResourceAllocation, MaintenanceRequest, ResourceRequest, ResourceHistory, ExamSchedule, ExamAttendanceRecord, SubjectAllocation, AllocationHistory, MentorAllocation, MentoringHistory, AssignedTask, WorkloadSettings } from '../data/types';
 import { sampleData } from '../data/sampleData';
+import { useCloudState } from '@/lib/cloud-state';
 import { validateTimetableEntry } from '../roles/hod/timetableLogic';
 
 interface StoreContextValue {
@@ -54,7 +55,7 @@ interface StoreContextValue {
 const StoreContext = createContext<StoreContextValue | null>(null);
 
 export function StoreProvider({ children }: { children: ReactNode }) {
-  const [data, setData] = useState<AppData>(sampleData);
+  const [data, setData] = useCloudState<AppData>('college.data', sampleData);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
 
   const currentUser = useMemo(

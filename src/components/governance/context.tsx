@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
+import { useCloudState } from '@/lib/cloud-state';
 import {
   Role, departments, students, faculty,
   initialPolicies, budgetItems, initialMeetings, initialProjects,
@@ -45,13 +46,13 @@ const AppContext = createContext<AppContextType | null>(null);
 
 export function AppProvider({ children }: { children: ReactNode }) {
   const [currentRole, setCurrentRole] = useState<Role | null>(null);
-  const [depts, setDepts] = useState(departments);
-  const [policies, setPolicies] = useState(initialPolicies);
-  const [meetings, setMeetings] = useState(initialMeetings);
-  const [projects, setProjects] = useState(initialProjects);
-  const [appointments, setAppointments] = useState(initialAppointments);
-  const [collaborations, setCollaborations] = useState(initialCollaborations);
-  const [improvementPlans, setImprovementPlans] = useState(initialImprovementPlans);
+  const [depts, setDepts] = useCloudState('gov.depts', departments);
+  const [policies, setPolicies] = useCloudState('gov.policies', initialPolicies);
+  const [meetings, setMeetings] = useCloudState('gov.meetings', initialMeetings);
+  const [projects, setProjects] = useCloudState('gov.projects', initialProjects);
+  const [appointments, setAppointments] = useCloudState('gov.appointments', initialAppointments);
+  const [collaborations, setCollaborations] = useCloudState('gov.collaborations', initialCollaborations);
+  const [improvementPlans, setImprovementPlans] = useCloudState('gov.improvementPlans', initialImprovementPlans);
 
   const updatePolicy = (updated: Policy) =>
     setPolicies(prev => prev.map(p => p.id === updated.id ? updated : p));

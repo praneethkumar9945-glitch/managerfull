@@ -6,6 +6,7 @@ import {
   useState,
   type ReactNode,
 } from "react";
+import { useCloudState } from "@/lib/cloud-state";
 
 // ---------------- Types ----------------
 export type Role = "System Administrator" | "HR Personnel" | "Department Manager";
@@ -176,8 +177,8 @@ const uid = (p: string) => `${p}-${Math.random().toString(36).slice(2, 7)}`;
 export function HRProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useLocal<Role>("hr.role", "System Administrator");
   const [signedIn, setSignedIn] = useLocal<boolean>("hr.signedIn", false);
-  const [employees, setEmployees] = useLocal<Employee[]>("hr.employees", seedEmployees);
-  const [attendance, setAtt] = useLocal<Record<string, AttStatus>>("hr.attendance", {
+  const [employees, setEmployees] = useCloudState<Employee[]>("hr.employees", seedEmployees);
+  const [attendance, setAtt] = useCloudState<Record<string, AttStatus>>("hr.attendance", {
     "E-1001": "Present",
     "E-1002": "Present",
     "E-1003": "Present",
@@ -185,9 +186,9 @@ export function HRProvider({ children }: { children: ReactNode }) {
     "E-1005": "Absent",
     "E-1006": "Present",
   });
-  const [leaves, setLeaves] = useLocal<LeaveRequest[]>("hr.leaves", seedLeaves);
-  const [evaluations, setEvals] = useLocal<Evaluation[]>("hr.evals", seedEvals);
-  const [users, setUsers] = useLocal<AppUser[]>("hr.users", seedUsers);
+  const [leaves, setLeaves] = useCloudState<LeaveRequest[]>("hr.leaves", seedLeaves);
+  const [evaluations, setEvals] = useCloudState<Evaluation[]>("hr.evals", seedEvals);
+  const [users, setUsers] = useCloudState<AppUser[]>("hr.users", seedUsers);
 
   const value: HRState = useMemo(
     () => ({
