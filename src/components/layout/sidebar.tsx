@@ -22,6 +22,8 @@ import {
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
+import { useAuth, canAccess } from "@/lib/auth";
+import { ShieldCheck } from "lucide-react";
 
 type Item = {
   to: string;
@@ -73,6 +75,8 @@ const NAV: Item[] = [
 
 export function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const { roles } = useAuth();
+  const items = [...NAV.filter((i) => canAccess(roles, i.to)), ...(roles.includes("admin") ? [{ to: "/users", label: "Users & Roles", icon: ShieldCheck } as Item] : [])];
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   const [open, setOpen] = useState<Record<string, boolean>>({
     "/admission": pathname.startsWith("/admission"),
@@ -103,7 +107,7 @@ export function Sidebar() {
             Workspace
           </div>
         )}
-        {NAV.map((item) => {
+        {items.map((item) => {
           const active = item.to === "/" ? pathname === "/" : pathname.startsWith(item.to);
           const Icon = item.icon;
           const hasChildren = !!item.children?.length && !collapsed;

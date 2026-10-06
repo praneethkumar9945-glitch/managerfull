@@ -1,4 +1,5 @@
 import { useState, useMemo } from 'react';
+import { useCloudState } from '@/lib/cloud-state';
 import {
   Sidebar, TopBar, NotificationsPanel, roleConfigs,
   type RoleConfig,
@@ -53,9 +54,9 @@ function App() {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showRoleSwitcher, setShowRoleSwitcher] = useState(false);
   const [showCoverPage, setShowCoverPage] = useState(true);
-  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
-  const [requests, setRequests] = useState<TaskRequest[]>([]);
+  const [notifications, setNotifications] = useCloudState<Notification[]>('mkt.notifications', initialNotifications);
+  const [tasks, setTasks] = useCloudState<Task[]>('mkt.tasks', initialTasks);
+  const [requests, setRequests] = useCloudState<TaskRequest[]>('mkt.requests', []);
   const [workflowState, setWorkflowState] = useState<WorkflowState>(initialWorkflowState);
 
   const roleConfig: RoleConfig = useMemo(
