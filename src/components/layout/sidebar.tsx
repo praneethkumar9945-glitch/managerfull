@@ -17,6 +17,7 @@ import {
   LayoutGrid,
   TrendingUp,
   Landmark,
+  Megaphone,
   Scale,
 } from "lucide-react";
 import { useState } from "react";
