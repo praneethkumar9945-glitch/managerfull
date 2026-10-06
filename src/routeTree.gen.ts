@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as AppIndexRouteImport } from './routes/_app.index'
 import { Route as AppAcademicRouteImport } from './routes/_app.academic'
 import { Route as AppAdmissionRouteImport } from './routes/_app.admission'
@@ -53,6 +54,11 @@ import { Route as AppSalesAgentsIdRouteImport } from './routes/_app.sales.agents
 
 const AppRoute = AppRouteImport.update({
   id: '/_app',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AppIndexRoute = AppIndexRouteImport.update({
@@ -259,6 +265,7 @@ const AppSalesAgentsIdRoute = AppSalesAgentsIdRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof AppIndexRoute
+  '/auth': typeof AuthRoute
   '/academic': typeof AppAcademicRouteWithChildren
   '/admission': typeof AppAdmissionRouteWithChildren
   '/ai': typeof AppAiRoute
@@ -300,6 +307,7 @@ export interface FileRoutesByFullPath {
   '/sales/agents/': typeof AppSalesAgentsIndexRoute
 }
 export interface FileRoutesByTo {
+  '/auth': typeof AuthRoute
   '/ai': typeof AppAiRoute
   '/college': typeof AppCollegeRoute
   '/crm': typeof AppCrmRoute
@@ -339,6 +347,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_app': typeof AppRouteWithChildren
+  '/auth': typeof AuthRoute
   '/_app/academic': typeof AppAcademicRouteWithChildren
   '/_app/admission': typeof AppAdmissionRouteWithChildren
   '/_app/ai': typeof AppAiRoute
@@ -384,6 +393,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/auth'
     | '/academic'
     | '/admission'
     | '/ai'
@@ -425,6 +435,7 @@ export interface FileRouteTypes {
     | '/sales/agents/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/auth'
     | '/ai'
     | '/college'
     | '/crm'
@@ -463,6 +474,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/_app'
+    | '/auth'
     | '/_app/academic'
     | '/_app/admission'
     | '/_app/ai'
@@ -507,6 +519,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   AppRoute: typeof AppRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -516,6 +529,13 @@ declare module '@tanstack/react-router' {
       path: ''
       fullPath: '/'
       preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/_app/': {
@@ -939,6 +959,7 @@ const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   AppRoute: AppRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
