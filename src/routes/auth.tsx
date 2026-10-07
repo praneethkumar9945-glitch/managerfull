@@ -58,6 +58,7 @@ function AuthPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setMsg(error.message);
     } else {
+      window.localStorage.setItem("pending_role", role);
       const { error } = await supabase.auth.signUp({
         email, password,
         options: { emailRedirectTo: window.location.origin, data: { full_name: name } },
