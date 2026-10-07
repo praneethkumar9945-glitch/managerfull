@@ -28,13 +28,24 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [role, setRole] = useState<AppRole>("staff");
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => data.user && navigate({ to: "/", replace: true }));
+    const afterSignIn = async () => {
+      const pending = window.localStorage.getItem("pending_role") as AppRole | null;
+      try {
+        await claimRole({ data: { role: pending && pending !== "admin" ? pending : null } });
+      } catch {
+        // role claim is best-effort; an admin can assign roles later
+      }
+      window.localStorage.removeItem("pending_role");
+      navigate({ to: "/", replace: true });
+    };
+    supabase.auth.getUser().then(({ data }) => data.user && afterSignIn());
     const { data } = supabase.auth.onAuthStateChange((_e, s) => {
-      if (s?.user) navigate({ to: "/", replace: true });
+      if (s?.user) afterSignIn();
     });
     return () => data.subscription.unsubscribe();
   }, [navigate]);
