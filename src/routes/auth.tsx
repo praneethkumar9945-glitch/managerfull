@@ -3,6 +3,10 @@ import { useEffect, useState } from "react";
 import { School } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import { claimRole } from "@/lib/roles.functions";
+import { ROLE_LABELS, type AppRole } from "@/lib/auth";
+
+const SIGNUP_ROLES = (Object.keys(ROLE_LABELS) as AppRole[]).filter((r) => r !== "admin");
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
