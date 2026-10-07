@@ -3,6 +3,10 @@ import { useEffect, useState } from "react";
 import { School } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
+import { claimRole } from "@/lib/roles.functions";
+import { ROLE_LABELS, type AppRole } from "@/lib/auth";
+
+const SIGNUP_ROLES = (Object.keys(ROLE_LABELS) as AppRole[]).filter((r) => r !== "admin");
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -24,13 +28,24 @@ function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
+  const [role, setRole] = useState<AppRole>("staff");
   const [msg, setMsg] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
-    supabase.auth.getUser().then(({ data }) => data.user && navigate({ to: "/", replace: true }));
+    const afterSignIn = async () => {
+      const pending = window.localStorage.getItem("pending_role") as AppRole | null;
+      try {
+        await claimRole({ data: { role: pending && pending !== "admin" ? pending : null } });
+      } catch {
+        // role claim is best-effort; an admin can assign roles later
+      }
+      window.localStorage.removeItem("pending_role");
+      navigate({ to: "/", replace: true });
+    };
+    supabase.auth.getUser().then(({ data }) => data.user && afterSignIn());
     const { data } = supabase.auth.onAuthStateChange((_e, s) => {
-      if (s?.user) navigate({ to: "/", replace: true });
+      if (s?.user) afterSignIn();
     });
     return () => data.subscription.unsubscribe();
   }, [navigate]);
@@ -43,6 +58,7 @@ function AuthPage() {
       const { error } = await supabase.auth.signInWithPassword({ email, password });
       if (error) setMsg(error.message);
     } else {
+      window.localStorage.setItem("pending_role", role);
       const { error } = await supabase.auth.signUp({
         email, password,
         options: { emailRedirectTo: window.location.origin, data: { full_name: name } },
@@ -71,7 +87,22 @@ function AuthPage() {
         </div>
         <form onSubmit={submit} className="space-y-3">
           {mode === "up" && (
-            <input className="w-full rounded-md border bg-background px-3 py-2 text-sm" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />
+            <>
+              <input className="w-full rounded-md border bg-background px-3 py-2 text-sm" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />
+              <div>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Your role</label>
+                <select
+                  className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value as AppRole)}
+                >
+                  {SIGNUP_ROLES.map((r) => (
+                    <option key={r} value={r}>{ROLE_LABELS[r]}</option>
+                  ))}
+                </select>
+                <p className="mt-1 text-[11px] text-muted-foreground">This decides which sections of the portal you can open.</p>
+              </div>
+            </>
           )}
           <input type="email" className="w-full rounded-md border bg-background px-3 py-2 text-sm" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           <input type="password" minLength={6} className="w-full rounded-md border bg-background px-3 py-2 text-sm" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
