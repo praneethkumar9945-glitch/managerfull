@@ -87,7 +87,22 @@ function AuthPage() {
         </div>
         <form onSubmit={submit} className="space-y-3">
           {mode === "up" && (
-            <input className="w-full rounded-md border bg-background px-3 py-2 text-sm" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />
+            <>
+              <input className="w-full rounded-md border bg-background px-3 py-2 text-sm" placeholder="Full name" value={name} onChange={(e) => setName(e.target.value)} required />
+              <div>
+                <label className="block text-xs font-medium text-muted-foreground mb-1">Your role</label>
+                <select
+                  className="w-full rounded-md border bg-background px-3 py-2 text-sm"
+                  value={role}
+                  onChange={(e) => setRole(e.target.value as AppRole)}
+                >
+                  {SIGNUP_ROLES.map((r) => (
+                    <option key={r} value={r}>{ROLE_LABELS[r]}</option>
+                  ))}
+                </select>
+                <p className="mt-1 text-[11px] text-muted-foreground">This decides which sections of the portal you can open.</p>
+              </div>
+            </>
           )}
           <input type="email" className="w-full rounded-md border bg-background px-3 py-2 text-sm" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
           <input type="password" minLength={6} className="w-full rounded-md border bg-background px-3 py-2 text-sm" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
