@@ -19,6 +19,7 @@ import {
   Landmark,
   Megaphone,
   Scale,
+  Building2,
 } from "lucide-react";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
@@ -69,6 +70,7 @@ const NAV: Item[] = [
   { to: "/hr", label: "HR", icon: Briefcase },
   { to: "/college", label: "College Portal", icon: Landmark },
   { to: "/marketing", label: "Marketing", icon: Megaphone, badge: "New" },
+  { to: "/placement", label: "Placement", icon: Building2 },
   { to: "/governance", label: "Governance", icon: Scale },
   { to: "/ai", label: "AI Analytics", icon: Sparkles, badge: "New" },
 ];
