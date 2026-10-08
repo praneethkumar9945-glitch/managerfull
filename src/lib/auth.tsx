@@ -17,7 +17,7 @@ const ROLE_PATHS: Record<AppRole, string[] | "all"> = {
   admin: "all",
   principal: "all",
   hr: ["/", "/hr", "/workspace"],
-  academic: ["/", "/academic", "/students", "/exams", "/college", "/workspace"],
+  academic: ["/", "/academic", "/students", "/exams", "/college", "/placement", "/workspace"],
   admissions: ["/", "/admission", "/crm", "/students", "/fees", "/workspace"],
   sales: ["/", "/sales", "/crm", "/workspace"],
   marketing: ["/", "/marketing", "/crm", "/workspace"],
